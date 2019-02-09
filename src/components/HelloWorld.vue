@@ -1,58 +1,70 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+  <div>
+    <slot name="learn"/>
+    <h1>I am from Hello World.</h1>
+    <slot name="app"></slot>
+
+    <hr>
+
+    <h1>Let's learn transition</h1>
+
+    <button @click="transitionGuy = ! transitionGuy">Transition Button</button>
+    <transition name="fade">
+      <p v-if="transitionGuy">hello</p>
+    </transition>
+
+    <hr>
+    <h1>Flip List Awesome</h1>
+    <div id="flip-list-demo" class="demo">
+      <button v-on:click="shuffle">Shuffle</button>
+      <transition-group name="flip-list" tag="ul">
+        <li v-for="item in items" v-bind:key="item">{{ item }}</li>
+      </transition-group>
+    </div>
+
+
+    <hr>
+    <hr>
+    Trying out mixins
+    <div v-for="item in itemForMixins">
+        {{item}}
+    </div>
   </div>
 </template>
-
 <script>
+import lodash from "lodash";
+import itemSuffle from '../mixins/mixins';
 export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String
-  }
-}
+  data() {
+    return {
+      test: "Hii",
+      transitionGuy: false,
+      items: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    };
+  },
+  methods: {
+     shuffle: function() {
+      this.items = _.shuffle(this.items);
+    }
+  },
+  props: ["msg"],
+  mixins: [itemSuffle]
+};
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
-  margin: 40px 0 0;
+<style>
+h1 {
+  color: blue;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
+.flip-list-move {
+  transition: transform 1s;
 }
-li {
-  display: inline-block;
-  margin: 0 10px;
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
 }
-a {
-  color: #42b983;
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 </style>
